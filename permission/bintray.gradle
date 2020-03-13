@@ -5,7 +5,7 @@ publish {
     userOrg = 'lovelylsmya'
     groupId = 'android.library'
     artifactId = 'permission'
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.2'
     desc = 'Android permission request'
     website = 'https://github.com/lsmya/AndroidLibrary'
 }

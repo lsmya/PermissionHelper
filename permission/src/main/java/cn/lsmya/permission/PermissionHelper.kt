@@ -33,13 +33,8 @@ class PermissionHelper(val mActivity: FragmentActivity) {
     }
     /**
      * 开始申请权限
-     *
-     * @param onPermissionListener 权限申请监听
      */
-    /**
-     * 开始申请权限
-     */
-    fun builder(yes: (() -> Unit)? = null, no: ((ArrayList<String>) -> Unit)? = null) {
+    fun builder(no: ((ArrayList<String>) -> Unit)? = null,yes: (() -> Unit)? = null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             request23ToActivity(yes, no)
         } else {

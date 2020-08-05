@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
                 .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .permission(Manifest.permission.CAMERA)
                 .builder {
+
                 }
         }
     }

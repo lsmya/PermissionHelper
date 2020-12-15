@@ -1,6 +1,7 @@
 package cn.lsmya.permission
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
@@ -21,20 +22,21 @@ class PermissionHelper(val mActivity: FragmentActivity) {
      * @return 返回EasyPermission
      */
     fun permission(vararg permission: String): PermissionHelper {
-        mPermissions.addAll(Arrays.asList<String>(*permission))
+        mPermissions.addAll(listOf(*permission))
         return this
     }
 
     fun permission(vararg permission: Array<String>): PermissionHelper {
         for (mPermission in permission) {
-            mPermissions.addAll(Arrays.asList<String>(*mPermission))
+            mPermissions.addAll(listOf(*mPermission))
         }
         return this
     }
+
     /**
      * 开始申请权限
      */
-    fun builder(no: ((ArrayList<String>) -> Unit)? = null,yes: (() -> Unit)? = null) {
+    fun builder(no: ((ArrayList<String>) -> Unit)? = null, yes: (() -> Unit)? = null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             request23ToActivity(yes, no)
         } else {
@@ -45,8 +47,11 @@ class PermissionHelper(val mActivity: FragmentActivity) {
     /**
      * sdk23以上申请权限
      */
-    private fun request23ToActivity(yes: (() -> Unit)? = null, no: ((ArrayList<String>) -> Unit)? = null) {
-        if (checkPermission()) {
+    private fun request23ToActivity(
+        yes: (() -> Unit)? = null,
+        no: ((ArrayList<String>) -> Unit)? = null
+    ) {
+        if (checkPermission(mActivity, mPermissions)) {
             PermissionFragment.getInstance(
                 mPermissions
             )
@@ -54,24 +59,6 @@ class PermissionHelper(val mActivity: FragmentActivity) {
         } else {
             yes?.invoke()
         }
-    }
-
-    /**
-     * 检查权限
-     *
-     * @return true:需要申请；false:已申请
-     */
-    private fun checkPermission(): Boolean {
-        for (s in mPermissions) {
-            if (ContextCompat.checkSelfPermission(
-                    mActivity,
-                    s
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return true
-            }
-        }
-        return false
     }
 
     companion object {
@@ -151,6 +138,43 @@ class PermissionHelper(val mActivity: FragmentActivity) {
             Manifest.permission.RECEIVE_WAP_PUSH,
             Manifest.permission.RECEIVE_MMS
         )
+
+        /**
+         * 检查权限是否需要申请
+         *
+         * @return true:需要申请；false:已申请
+         */
+        fun checkPermission(context: Context, permissions: ArrayList<String>): Boolean {
+            for (s in permissions) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        s
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        /**
+         * 检查权限是否需要申请
+         *
+         * @return true:需要申请；false:已申请
+         */
+        fun checkPermission(context: Context, vararg permission: String): Boolean {
+            for (s in listOf(*permission)) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        s
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return true
+                }
+            }
+            return false
+        }
+
     }
 
 }
